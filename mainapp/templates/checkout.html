@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+{% load cart %}
+    <!-- <style>
+        * {
+            font-family: Li-Ador-Noirrit-R;
+        }
+
+        p,
+        span,
+        h5 {
+            font-size: 17px;
+            font-family: Li-Ador-Noirrit-R;
+        }
+
+        h5 {
+            font-size: 20px;
+        }
+.end-checkout{
+			text-align: center;
+			margin:40px auto;
+			
+			
+		}
+		.title-checkend{
+		    font-size:20px;
+		    margin:30px auto;
+		}
+		.end-checkout a{
+			padding: 10px 20px;
+			background: red;
+			text-decoration: none;
+			color: snow;
+		
+		}
+	    .end-checkout .icon{
+	        height:100px;
+	        width:100px;
+	        border:1px solid;
+	        border-radius:50%;
+	        padding:15px;
+	        display:flex;
+	        justify-content:center;
+	        align-items:center;
+	        font-size:35px;
+	        color:green;
+	        margin:10px auto;
+	    }
+	    .footer{
+	        margin-top:172px;
+	    }
+	    
+	    input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+    </style> -->
+  
+
+
+     <section id="main_div">
+            <div class="cart-section">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-5 col-12 mb-md-0 mb-4">
+                            <div class="card" style="border: none">
+                                <div class="card-body p-2">
+                                    <p class="text-center">অর্ডারটি কনফার্ম করতে আপনার নাম, ঠিকানা, মোবাইল নাম্বার, লিখে <span class="text-danger">অর্ডার কনফার্ম করুন</span> বাটনে ক্লিক করুন</p>
+                                    <form action="{% url 'mainapp:order_confirm' %}" method="post" id="checkout_form" class="checkout_form">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label for="customer_name">আপনার নাম </label>
+                                            <input type="text" class="form-control" id="customer_name" name="customer_name" placeholder="আপনার নাম লিখুন" required="" spellcheck="false" data-ms-editor="true">                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="shipping_area">আপনার ঠিকানা</label>
+                                            <input type="text" class="form-control" id="shipping_area" name="shipping_address" placeholder="আপনার ঠিকানা লিখুন" required="" spellcheck="false" data-ms-editor="true">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="phone_number">আপনার মোবাইল</label>
+                                            <input type="number" class="form-control" id="phone_number" name="phone_number" minlength="11" maxlength="11" placeholder="**ফোন নাম্বার ১১ ডিজিট এর হতে হবে" required="true">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="shipping_cost">আপনার এরিয়া সিলেক্ট করুন</label>
+                                            <!-- <select name="shipping_method" id="shippingMethod" class="form-control" required="" onchange="console.log(parseInt(subTotal.textContent))"> -->
+                                            <select name="shipping_cost" id="shipping_cost" class="form-control" required="true" onchange="changeShipingCharge(this)">
+                                                <option value="">এরিয়া সিলেক্ট করুন</option>
+                                                <option value="120" required="">ঢাকার বাইরে 120TK</option>
+                                                <option value="60" required="">ঢাকার ভিতরে 60TK</option>
+                                            </select>
+                                            <p id="error" style="color: red; display: none;">আপনার এরিয়া সিলেক্ট করুন</p>
+                                        </div>
+                                        {% if cart_length != 0 %}
+                                        <button type="submit" class="btn btn-success w-100 mb-2" style="height: 50px" id="conf_order_btn" name="order">অর্ডার কনফার্ম করুন</button>
+                                        {% else  %}
+                                        <button type="submit" disabled="true" class="btn btn-success w-100 mb-2" style="height: 50px" id="conf_order_btn" name="order">অর্ডার কনফার্ম করুন</button>
+                                        {% endif %}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-7 col-12">
+                            <div class="card" style="border: 1px solid #e9e9e9">
+                                <h5 class="font-weight-bold card-header">আপনার অর্ডার</h5>
+                                <div class="card-body p-2 table-responsive" id="order_info_table">
+                                    
+                                    <table class="cart_table table text-center mb-0" id="order_table">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Product</th>
+                                                <th>Price</th>
+                                                <th>Quantity</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                           {% for item in item_list %}
+
+                                            <form id="deleteForm_{{ item.id }}" action="{% url 'mainapp:add_to_cart' %}" method="post" class="order-div" >
+                                                {% csrf_token %}
+                                                <input type="hidden" name="item_id" value="{{ item.id }}"> 
+                                                <input type="hidden" name="delete" value="True"> 
+                                                <input type="submit" style="display: none;" />
+                                            </form>
+                                            <form id="minusForm_{{ item.id }}" action="{% url 'mainapp:add_to_cart' %}" method="post" class="order-div" >
+                                                {% csrf_token %}
+                                                <input type="hidden" name="item_id" value="{{ item.id }}"> 
+                                                <input type="hidden" name="remove" value="True"> 
+                                                <input type="submit" style="display: none;" />
+                                            </form>
+
+                                            <form id="plusForm_{{ item.id }}" action="{% url 'mainapp:add_to_cart' %}" method="post" class="order-div" >
+                                                {% csrf_token %}
+                                                <input type="hidden" name="item_id" value="{{ item.id }}"> 
+                                                <input type="submit" style="display: none;" />
+                                            </form>
+
+                                            <tr>
+                                                
+                                                <td><a href="#"  onclick="document.getElementById('deleteForm_{{ item.id }}').submit(); return false;"><i class="fa fa-trash-o text-danger"></i></a></td>
+                                                <td class="text-left">
+                                                    <a href="{{item.get_absolute_url}}"><img width="35" src="{{item.item_image.url}}" alt="{{item.item_name}}"></a>
+                                                    
+                                                    <a href="{{item.get_absolute_url}}" style="font-size: 14px; color:dodgerblue;text-transform: capitalize;">{{item.item_name}}</a>
+                                                </td>
+                                                <td class="price">{{item.discount_price}}</td>
+                                                
+                                                <td width="15%" class="cart_qty">                                                    
+                                                    <a href="#" class="minus" onclick="document.getElementById('minusForm_{{ item.id }}').submit(); return false;"><i class="fa fa-minus qty_minus"></i></a>
+                                                    <input type="text" name="qty" class="quantity" id="quantity" min="1" value="{{item|card_quantity:request.session.cart}}" readonly="">
+                                                    <a href="#" class="plus" onclick="document.getElementById('plusForm_{{ item.id }}').submit(); return false;"><i class="fa fa-plus qty_plus"></i></a>
+                                                    
+                                                </td>
+                                                <td class="price item_price">{{item|item_total:request.session.cart}}</td>
+                                            </tr>
+                                            {% endfor %}
+
+                                            {% if item_list.count == 0 %}
+                                            <tr>
+                                                <td colspan="5">No Product added yeat</td>
+                                            </tr>
+                                            {% endif %}
+                            
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="4" class="text-right pr-2">Sub Total</th>
+                                                 
+                                                <td id="subTotal" >{{subtotal}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th colspan="4" class="text-right pr-2">Shipping Cost</th>
+                                                <td id="shippingCharge">{% if item_list.count != 0 %}60{% else %}0{% endif %}</td>
+                                            </tr>
+                                            <tr>
+                                                <th colspan="4" class="text-right pr-2">Total</th>
+                                                <td id="totalPrice" >{% if item_list.count != 0 %} {{subtotal|add:60}}{% else %}0{% endif %}</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+              
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <script>
+            
+            var subTotal=document.getElementById('subTotal');
+            var totalPrice=document.getElementById('totalPrice');
+            var shippingCharge=document.getElementById('shippingCharge');
+
+
+            function changeShipingCharge(charge){
+                if (!(parseInt(subTotal.textContent)<=0)){
+                    totalPrice.textContent=parseInt(subTotal.textContent)+ parseInt(charge.value);
+                    shippingCharge.textContent=charge.value;
+
+                }
+            }
+          
+        </script>
+       
+        {% endblock %}

@@ -1,0 +1,191 @@
+
+{% load static %}
+
+    <header>
+        <div class="header-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 col-7 d-md-block d-none">
+                        <div class="header-left">
+                            <p>Welcome to ConfigShop</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8 col-5">
+                        <div class="header-right">
+                            <ul>
+                                <li>
+                                    <i class="fa fa-search"></i>
+                                    <a href="#">
+                                        <span>Track Order</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-1 d-md-none category_menu">
+                        <ul>
+                            <li>
+                                <a href="#" class="pull-bs-canvas-left"><i class="fa fa-bars"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3 col-6 wrap_logo">
+                        <div class="logo">
+
+
+                            <a href="{% url 'mainapp:home_page' %}"><img src="{% static 'images/aponShopLogo.png' %}" alt="logo" ;></a>
+
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 py-md-3 d-none d-md-block">
+                        <div class="search">
+                            <form action="{% url 'mainapp:home_page' %}" method="get">
+                                <select name="cat_name" id="category_name" class="search-select">
+                                    <option value="">ক্যাটেগরীজ</option>
+                                    {% for cat in categories %}
+                                    <option value="{{cat.category}}">{{cat.category}}</option>
+                                    {% endfor %}
+                                  
+                                </select>
+                                <input type="text" name="key" class="search-input" placeholder="সার্চ করুন"
+                                    id="search_bar" onchange="">
+                                <button type="submit" class="search-btn"></button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 text-md-right text-center py-3 d-none d-md-block">
+                        <span class="cart-number d-none d-md-inline-block"><i class="fa fa-phone"></i> <a
+                                href="tel:01710609392"
+                                style="text-decoration: none; color: white; font-size:20px;">01710609392</a></span>
+                        <div class="cart d-inline-block position-relative">
+                            <span class="badge badge-danger rounded-circle">{{ cart_length }}</span>
+                            <a href="{% url 'mainapp:checkout_page' %}"><i style="color: #fff" class="fa fa-2x fa-shopping-cart"></i></a>
+                        </div>
+                    </div>
+
+
+                    <div class="col-5 d-md-none logo_right_options">
+                        <ul>
+                            <li>
+                                <i class="fa fa-search" id="search_mobile_btn"></i>
+                            </li>
+                            <li>
+                                <a href="tel:01710609392"><i class="fa fa-phone-square"></i></a>
+                            </li>
+                            <li>
+                                <span class="cart-number d-none d-md-inline-block"><i class="fa fa-phone"></i>
+                                    01710609392</span>
+                                <div class="cart d-inline-block position-relative">
+                                    <span class="badge badge-danger rounded-circle">{{ cart_length }}</span>
+                                    <a href="{% url 'mainapp:checkout_page' %}"><i style="color: #fff"
+                                            class="fa fa-2x fa-shopping-cart"></i></a>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bs-canvas bs-canvas-left position-fixed bg-light h-100">
+                <header class="bs-canvas-header">
+                    <h4 class="d-inline-block text-light mb-0">Categories</h4>
+                    <button type="button" class="bs-canvas-close close" aria-label="Close"><span aria-hidden="true"
+                            class="text-light">&times;</span></button>
+                </header>
+                <div class="bs-canvas-content">
+                    <div class="cat_menu_m">
+                        <ul>
+                            <li>
+                                <a href="{% url 'mainapp:home_page' %}">Home</a>
+                            </li>
+                            {% for cat in categories %}
+                            <li>
+                                <a href="{% url 'mainapp:item_list_by_category' cat.category %}"> {{cat.category}}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="#" class="btn btn-dark btn-sm w-100 mt-5">Track Order</a>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="search-form-m mobile_search">
+                <form action="#" method="get">
+                    <input type="text" name="query" class="form-control" placeholder="সার্চ করুন" autocomplete="off"
+                        id="search_bar2">
+                    <button type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </form>
+
+                <button class="search_btnclose">
+                    <i class="fa fa-times-circle"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="header-bottom d-md-block d-none">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="cat_menu">
+                            <ul>
+                                <li>
+                                    <a href="{% url 'mainapp:home_page' %}">Home</a>
+                                </li>
+                                {% for cat in categories %}
+                                <li>
+                                    <a href="{% url 'mainapp:item_list_by_category' cat.category %}"> {{cat.category}}</a>
+                                </li>
+                                {% endfor %}
+                            
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- <section>
+        <div class="slider">
+            <div class="container-fluid container-97">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="home_slider" class="carousel slide" data-ride="carousel">
+                            <ol class="carousel-indicators">
+                                <li data-target="#home_slider" data-slide-to="0" class="active"></li>
+                                <li data-target="#home_slider" data-slide-to="1"></li>
+                            </ol>
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="images/slider1.jpg" class="d-block w-100" alt="" height="400px">
+                                </div>
+                                <div class="carousel-item ">
+                                    <img src="images/slider2.jpg" class="d-block w-100" alt="" height="400px">
+                                </div>
+                                <div class="carousel-item ">
+                                    <img src="images/slider2.jpg" class="d-block w-100" alt="" height="400px">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+   
+

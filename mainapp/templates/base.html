@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% include 'head.html' %}
+    <body>
+        <!-- Mobile NevBar -->
+        <div class="footer_nav">
+            <div class="footer_nav_link">
+                <a href="{% url 'mainapp:home_page' %}">
+                    <i class="fa-solid fa-house"></i>
+                    <p>Home</p>
+                </a>
+            </div>
+            <div class="footer_nav_link">
+                <a href="tel: 01710609392">
+                    <i class="fa-solid fa-phone"></i>
+                    <p>Call</p>
+                </a>
+            </div>
+
+            <div class="footer_nav_link">
+                <a href="{% url 'mainapp:checkout_page' %}">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <p>Cart</p>
+                </a>
+            </div>
+        </div>
+        <!-- Mobile NevBar -->
+        <div class="main-wrapper"></div>
+        
+        {% include 'navbar.html' %}
+        {% block content %}
+        {% endblock %}
+        
+
+        {% block extra_body %}
+        {% endblock %}
+        {% include 'footer.html' %}
+        </div>
+        <a id="back-to-top-btn"></a>
+        
+        {% include 'script.html' %}
+        {% block extra_scripts %}
+        {% endblock extra_scripts %}
+
+    </body>
+</html>

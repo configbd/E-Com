@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+{% load cart %}
+
+
+        <section>
+            <div class="product_categories">
+                <div class="container-fluid container-97">
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="mb-3">প্রোডাক্ট ক্যাটেগরীজ</h5>
+                            <div class="horiz_cat">
+                                <ul>
+                                    {% for cat in categories %}
+                                    <li>
+                                        {{cat.category}}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <!-- Swiper -->
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    {% for slider in sliders %}
+                    <div class="swiper-slide">
+                        <img src="{{slider.slider_image.url}}" class="d-block w-100" alt="{{slider.name}}" height="400px">
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </section>
+        <!-- Swiper JS  swiper-bundle.min.js -->
+        <script src="{% static 'js/swiper-bundle.min.js' %}"></script>
+        <!-- Initialize Swiper -->
+        <script>
+            var swiper = new Swiper(".mySwiper", {
+                centeredSlides: true,
+    
+                autoplay: {
+                    delay: 2500,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                    dynamicBullets: true,
+                },
+            });
+        </script>
+
+
+        <div id="main_div">
+
+            <section>
+                <div class="hot-deals-product-section">
+                    <div class="container-fluid container-97">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="hot-deals-inner-wrapper">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6 col-6">
+                                            <div class="hot-deals-gif">
+                                                <img src="#" alt="">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-6">
+                                            <div class="all-hot-deals-btn text-right mt-2">
+                                                <a href="#">সকল হট ডিল <i
+                                                        class="fa fa-angle-right"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row m-0">
+
+
+                                        <div class="owl-carousel">
+
+                                            {% for item in hot_deals_product %}
+                                            <div class="hot-deals-product">
+                                                <div class="hot-deals-product-inner-wrapper text-center">
+                                                    {% if item.discount_percentage > 0 %}
+                                                    <p class="float_price_2">Discount {{item.discount_percentage}}%</p>
+                                                    {% endif %}
+                                                    <a href="{{item.get_absolute_url}}">
+                                                        <img src="{{item.item_image.url}}"
+                                                            alt="24k Gold 99% Soothing GEL" height="180px"
+                                                            width="180px">
+                                                    </a>
+                                                    <p class="font-weight-bold mb-0"
+                                                        style="color: #fca204; margin-top:10px; font-size:18px;">৳ {{item.price}}
+                                                        &nbsp;<span
+                                                            style="text-decoration: line-through;color: #b8b8b8">৳ {{item.discount_price}}</span></p>
+                                                    <p class="mb-0 prod_name"><a
+                                                            href="{{item.get_absolute_url}}">{{item.item_name}}</a></p>
+                                                </div>
+                                                {% with found_item=item|is_in_cart:request.session.cart %}
+                                                {% if found_item %}
+                                                <div class="order-div">
+                                                    <button class="order_now_btn" name="order_btn" style="background-color: #a9a9a9; border-color: #b8b8b8;"onmouseover="this.style.backgroundColor='green';"onmouseout="this.style.backgroundColor='#a9a9a9';">কার্ডে করেছেন </button>
+                                                </div>
+
+                                                {% else %}
+
+                                                <form action="{% url 'mainapp:add_to_cart' %}" method="post" class="order-div" >
+                                                    {% csrf_token %}
+                                                    
+                                                    <input type="hidden" name="item_id" value="{{ item.id }}"> 
+                                                    <!-- <input type="hidden" name="quantity" value="1"> -->
+                                                    
+                                                    <button class="order_now_btn" name="order_btn">অর্ডার করুন</button>
+                                                </form>
+                                                {% endif %}
+                                                {% endwith %}
+
+                                            </div>
+                                            {% endfor %}
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+           
+
+
+            <section>
+                <div class="main-products-section">
+                    <div class="container-fluid container-97">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4 class="mb-3">প্রয়োজনীয় প্রোডাক্ট</h4>
+                            </div>
+                        </div>
+                        <div class="row m-0">
+
+
+
+
+                            {% for item in object_list %}
+                            <div class="col-md-2 col-6 main-product">
+                                <div class="main-product-inner-wrapper text-center">
+                                    {% if item.discount_percentage > 0 %}
+                                    <p class="float_price_2">Discount {{item.discount_percentage}}%</p>
+                                    {% endif %}
+                                    <a href="{{item.get_absolute_url}}">
+                                        <img src="{{item.item_image.url}}" alt="Shield Laptop Stand "
+                                            height="180px" width="180px">
+                                    </a>
+                                    <p class="font-weight-bold mb-0"
+                                        style="color: #fca204; margin-top:10px; font-size:18px;">৳ {{item.price}} &nbsp;<span
+                                            style="text-decoration: line-through;color: #b8b8b8">৳ {{item.discount_price}}</span></p>
+                                    <p class="mb-0 prod_name"><a
+                                            href="{{item.get_absolute_url}}">{{item.item_name}}</a>
+                                    </p>
+                                </div>
+
+                                <div class="order-div">
+
+                                    {% with found_item=item|is_in_cart:request.session.cart %}
+                                    {% if found_item %}
+                                    <div class="order-div">
+                                        <button class="order_now_btn"  style="background-color: #a9a9a9; border-color: #b8b8b8;"onmouseover="this.style.backgroundColor='green';"onmouseout="this.style.backgroundColor='#a9a9a9';">অর্ডার করেছেন </button>
+                                    </div>
+
+                                    {% else %}
+
+                                    <form action="{% url 'mainapp:add_to_cart' %}" method="post" class="order-div" >
+                                        {% csrf_token %}
+                                        
+                                        <input type="hidden" name="item_id" value="{{ item.id }}"> 
+                                        <!-- <input type="hidden" name="quantity" value="1"> -->
+                                        
+                                        <button class="order_now_btn" name="order_btn">অর্ডার করুন</button>
+                                    </form>
+                                    {% endif %}
+                                    {% endwith %}
+                                </div>
+
+
+
+                               
+
+
+                                
+                                
+
+                            </div>
+                            {% endfor %}
+                            {% if object_list.count == 0 %}
+                            <div>
+                              <h1 style="text-align: center;">No items found</h1>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!------------ Pagination-------------->
+
+
+            {% if object_list.count >= 10 %}
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                <li class='page-item' aria-disabled='true' aria-label='&lsaquo; Next'>
+                    <a href='?page={{ page_obj.previous_page_number }}'><span class='page-link' aria-hidden='true'>&lsaquo;</span></a>
+                </li>
+                {% endif %}
+                {% if not page_obj.has_previous %}
+                <li class="page-item active"><a class="page-link" href="?page={{ page_obj.number}}">{{ page_obj.number}}</a></li>
+                <li class="page-item "><a class="page-link" href="?page={{ page_obj.number|add:'1' }}">{{ page_obj.number|add:'1' }}</a></li>
+                {% endif %}
+             
+                {% if page_obj.has_next and page_obj.has_previous %}
+                <li class="page-item "><a class="page-link" href="?page={{ page_obj.number|add:'-1' }}">{{ page_obj.number|add:'-1' }}</a></li>
+                <li class="page-item active"><a class="page-link" href="?page={{ page_obj.number}}">{{ page_obj.number }}</a></li>
+                <li class="page-item "><a class="page-link" href="?page={{ page_obj.number|add:'1' }}">{{ page_obj.number|add:'1' }}</a></li>
+                {% endif %}
+                {% if not page_obj.has_next %}
+                <li class="page-item "><a class="page-link" href="?page={{ page_obj.number|add:'-1' }}">{{ page_obj.number|add:'-1' }}</a></li>
+                <li class="page-item active"><a class="page-link" href="?page={{ page_obj.number}}">{{ page_obj.number }}</a></li>
+                {% endif %}
+                
+                {% if page_obj.has_next %}
+                <li class='page-item' aria-disabled='true' aria-label='&raquo; Next'>
+                    <a href='?page={{ page_obj.next_page_number }}'><span class='page-link' aria-hidden='true'>&rsaquo;</span></a>
+                </li>
+                {% endif %}
+            </ul>
+            {% endif %}
+        </div>
+
+        
+        <div hidden id="success_messages">
+               {% for msg in messages %}
+               <div></div>
+               {% endfor %}
+           </div>
+
+
+{% endblock %}

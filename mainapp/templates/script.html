@@ -1,0 +1,128 @@
+{% load static %}
+
+<script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'js/sweetalert.min.js' %}"></script>
+
+
+<script>
+    $(document).ready(function () {
+
+        
+    
+        $('.order_now_btn, .add_cart_btn').click(function () {
+            swal({
+                title: "প্রোডাক্টটি আপনার কার্ডে অ্যাড করা আছে ",
+                icon: "success",
+                timer: 1200
+            });
+
+        });
+        
+
+
+
+
+        var back_to_top_btn = $('#back-to-top-btn');
+
+        $(window).scroll(function () {
+            if ($(window).scrollTop() > 600) {
+                back_to_top_btn.addClass('show');
+            } else {
+                back_to_top_btn.removeClass('show');
+            }
+        });
+
+        back_to_top_btn.on('click', function (e) {
+            e.preventDefault();
+            $('html, body').animate({
+                scrollTop: 0
+            }, '300');
+        });
+
+    });
+    
+    $('#search_mobile_btn').on('click', function () {
+        $('.search-form-m').toggle()
+    });
+    
+    $('.search_btnclose').on('click', function () {
+        $('.search-form-m').toggle()
+    });
+</script>
+
+<script>
+    function showAlert() {
+            swal({
+                title: "আপনার অর্ডারটি আমাদের নিকট পৌঁছেছে। অতি শীঘ্রই আমাদের একজন প্রতিনিধি আপনার সাথে যোগাযোগ করবে।",
+                icon: "success",
+                timer: 4000
+            });
+        }
+        success_messages=document.getElementById("success_messages")
+        if (success_messages.childNodes.length >1){
+            
+         showAlert();
+
+            console.log(success_messages.childNodes.length)
+        }
+
+</script>
+
+
+
+
+
+
+<script>
+    $(document).on('click', '.pull-bs-canvas-left', function () {
+        $('body').prepend('<div class="bs-canvas-overlay bg-dark position-fixed w-100 h-00"></div>');
+        if ($(this).hasClass('pull-bs-canvas-right'))
+            $('.bs-canvas-right').addClass('mr-0');
+        else
+            $('.bs-canvas-left').addClass('ml-0');
+        return false;
+    });
+
+    $(document).on('click', '.bs-canvas-close, .bs-canvas-overlay', function () {
+        var elm = $(this).hasClass('bs-canvas-close') ? $(this).closest('.bs-canvas') : $('.bs-canvas');
+        elm.removeClass('mr-0 ml-0');
+        $('.bs-canvas-overlay').remove();
+        return false;
+    });
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        $(".owl-carousel").owlCarousel({
+            margin: 15,
+            loop: true,
+            dots: false,
+            autoplay: true,
+            autoplayTimeout: 6000,
+            autoplayHoverPause: true,
+            responsiveClass: true,
+            responsive: {
+                0: {
+                    margin: 10,
+                    items: 2,
+                    nav: true
+                },
+                600: {
+                    items: 3,
+                    nav: false
+                },
+                1000: {
+                    items: 6,
+                    nav: true,
+                    loop: true
+                }
+            }
+        });
+
+        $('.owl-nav').remove();
+    });
+
+</script>

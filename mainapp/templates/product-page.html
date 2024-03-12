@@ -1,0 +1,272 @@
+
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+{% load cart %}
+    <section>
+
+        <div class="category_breadcrumb">
+
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <p>
+                            <a href="{% url 'mainapp:home_page' %}">Home</a>
+                            /
+                            <a href="javascript:void(0);" style=" text-transform: capitalize">{{object.item_name}}</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <section>
+        <div class="products-details-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 col-12 mb-md-3 mb-2">
+
+                        <div id="sing_prod_img_slider" class="carousel slide" data-ride="carousel">
+                            {% if object.discount_percentage > 0 %}
+                            <p class="float_price_2">Discount {{object.discount_percentage}}%</p>
+                            {% endif %}
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="{{object.item_image.url}}" class="d-block w-100"
+                                        alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-5 mb-3">
+                        <h2 class="text-capitalize single_prod_title">{{object.item_name}}</h2>
+                        <h3 class="font-weight-bold single_prod_prices">
+                            <span class="old_price"
+                                style="text-decoration: line-through; color: #555;opacity: .5">৳ {{object.price|add:20}}</span>
+                            <span style="color: #fb4907">৳ {{object.price}}</span>
+                        </h3>
+
+
+                                    {% with found_item=item|is_in_cart:request.session.cart %}
+                                    {% if found_item %}
+                                    <div class="order-div">
+                                        <button class="order_now_btn"  style="background-color: #a9a9a9; border-color: #b8b8b8;"onmouseover="this.style.backgroundColor='green';"onmouseout="this.style.backgroundColor='#a9a9a9';">অর্ডার করেছেন </button>
+                                    </div>
+
+                                    {% else %}
+
+                                    <form action="{% url 'mainapp:add_to_cart' %}" method="post" class="order-div" >
+                                        {% csrf_token %}
+                                        
+                                        <input type="hidden" name="item_id" value="{{ item.id }}"> 
+                                        <!-- <input type="hidden" name="quantity" value="1"> -->
+                                        
+                                        <button class="order_now_btn" name="order_btn">অর্ডার করুন</button>
+                                    </form>
+                                    {% endif %}
+                                    {% endwith %}
+
+
+                       
+
+                        <div class="mt-md-2 mt-2">
+                            <h4 class="font-weight-bold">
+                                <a class="btn btn-success w-100 call_now_btn" style="font-weight: bold;"
+                                    href="tel:01710609392">
+                                    <i class="fa fa-phone-square"></i>
+                                    01710609392
+                                </a>
+                            </h4>
+
+
+                        </div>
+
+
+
+                        <div class="col-12 mt-3 delivery_details" style="padding: 0">
+                            <table class="table" style="color:#08c !important">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding-left: 0;border-bottom: 1px solid #ddd;">
+                                            ঢাকার বাইরে ডেলিভারি খরচ
+                                        </td>
+                                        <td style="border-bottom: 1px solid #ddd;">
+                                            <b>৳ 120</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-left: 0;border-bottom: 1px solid #ddd;">
+                                            ঢাকার ভিতরে ডেলিভারি খরচ
+                                        </td>
+                                        <td style="border-bottom: 1px solid #ddd;">
+                                            <b>৳ 60</b>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-3 mb-3 d-md-block d-none">
+                        <div class="features">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td class="icon"><i class="fa fa-thumbs-up" style="color: #666"></i>
+                                        </td>
+                                        <td class="text">100% original products</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="icon"><i class="fa fa-money" style="color: #666"></i></td>
+                                        <td class="text">Pay cash on delivery</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="icon"><i class="fa fa-shopping-cart"
+                                                style="color: #666;vertical-align: top"></i></td>
+                                        <td class="text">Delivery within: 2-3 business days</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="feature-products d-md-block d-none">
+                            <p>প্রয়োজনীয় প্রোডাক্ট</p>
+                            <div class="feature-products-wrapper">
+                                <table>
+
+                                    {% for item in object.item_category.item_set.all|slice:":3"  %}
+                                    <tr>
+                                        <td class="img">
+                                            <a href="{{item.get_absolute_url}}">
+                                                <img width="50" src="{{item.item_image.url}}"
+                                                    alt="">
+                                            </a>
+                                        </td>
+                                        <td class="title">
+                                            <a href="{{item.get_absolute_url}}" class="text-dark">{{item.item_name}}</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <ul class="nav nav-tabs nav-tabs-mod">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#">পন্যের বিবরণ</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content tab-content-mod">
+                            <div class="tab-pane active">
+                                <div>
+                                    <!-- Product Details section -->
+                                    {{ object.description | safe}}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 mt-3 d-block d-md-none">
+                        <div class="features">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td class="icon"><i class="fa fa-thumbs-up" style="color: #666"></i>
+                                        </td>
+                                        <td class="text">100% original products</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="icon"><i class="fa fa-money" style="color: #666"></i></td>
+                                        <td class="text">Pay cash on delivery</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="icon"><i class="fa fa-shopping-cart"
+                                                style="color: #666;vertical-align: top"></i></td>
+                                        <td class="text">Delivery within: 2-3 business days</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+
+        <div class="main-products-section">
+            <div class="container-fluid container-97">
+                <div class="row mt-5 related-products">
+                    <div class="col-md-12">
+                        <h4 class="mb-3">রিলেটেড প্রোডাক্ট</h4>
+                    </div>
+                </div>
+
+                <div class="row m-0">
+
+
+                    {% for item in object.item_category.item_set.all %}
+                    <div class="col-md-2 col-6 main-product">
+                        <div class="main-product-inner-wrapper text-center">
+                            {% if item.item.discount_percentage > 0 %}
+                            <p class="float_price_2">Discount {{item.item.discount_percentage}}%</p>
+                            {% endif %}
+                            <a href="{{item.get_absolute_url}}"><img
+                                    src="{{item.item_image.url}}" alt="Shield Laptop Stand "
+                                    height="180px" width="180px"></a>
+
+                            <p class="mb-0"
+                                style="text-decoration: line-through;color: #b8b8b8; font-size:18px;">৳ 22</p>
+                            <p class="font-weight-bold mb-0" style="color: #fca204; font-size:18px;">৳ 21</p>
+                            <p class="mb-0 prod_name"><a
+                                    href="{{item.get_absolute_url}}">{{item.item_name}}</a>
+                            </p>
+                        </div>
+                        {% with found_item=item|is_in_cart:request.session.cart %}
+                                    {% if found_item %}
+                                    <div class="order-div">
+                                        <button class="order_now_btn"  style="background-color: #a9a9a9; border-color: #b8b8b8;"onmouseover="this.style.backgroundColor='green';"onmouseout="this.style.backgroundColor='#a9a9a9';">অর্ডার করেছেন </button>
+                                    </div>
+
+                                    {% else %}
+
+                                    <form action="{% url 'mainapp:add_to_cart' %}" method="post" class="order-div" >
+                                        {% csrf_token %}
+                                        
+                                        <input type="hidden" name="item_id" value="{{ item.id }}"> 
+                                        <!-- <input type="hidden" name="quantity" value="1"> -->
+                                        
+                                        <button class="order_now_btn" name="order_btn">অর্ডার করুন</button>
+                                    </form>
+                                    {% endif %}
+                                    {% endwith %}
+                    </div>
+                    {% endfor %}
+
+
+
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+{% endblock %}
